@@ -34,17 +34,23 @@ const App = () => {
   ];
 
   const cabinImages = [
-    'Fotos/Nuestras_cabanas/CW6L8.jpg', 'Fotos/Nuestras_cabanas/GDu6p.jpg', 
-    'Fotos/Nuestras_cabanas/image (05).jpg', 'Fotos/Nuestras_cabanas/jTbMQ.jpg', 
-    'Fotos/Nuestras_cabanas/lNHtQ.jpg', 'Fotos/Nuestras_cabanas/NwY2h.jpg', 
-    'Fotos/Nuestras_cabanas/PiPm7.jpg', 'Fotos/Nuestras_cabanas/TZ4oe.jpg'
+    'Fotos/Nuestras_cabanas/02MuRc3.jpg', 'Fotos/Nuestras_cabanas/02PiPm7.jpg', 
+    'Fotos/Nuestras_cabanas/04k57lL.jpg', 'Fotos/Nuestras_cabanas/06PzGgp.jpg', 
+    'Fotos/Nuestras_cabanas/Bktwt.jpg', 'Fotos/Nuestras_cabanas/CW6L8.jpg', 
+    'Fotos/Nuestras_cabanas/GDu6p.jpg', 'Fotos/Nuestras_cabanas/image (05).jpg', 
+    'Fotos/Nuestras_cabanas/jTbMQ.jpg', 'Fotos/Nuestras_cabanas/lNHtQ.jpg', 
+    'Fotos/Nuestras_cabanas/NwY2h.jpg', 'Fotos/Nuestras_cabanas/PiPm7.jpg', 
+    'Fotos/Nuestras_cabanas/TZ4oe.jpg'
   ];
 
   const interiorImages = [
-    'Fotos/adentro_de_la_cabana/06pUwaW.jpg', 'Fotos/adentro_de_la_cabana/08Ne2S4.jpg', 
-    'Fotos/adentro_de_la_cabana/6gAp2.jpg', 'Fotos/adentro_de_la_cabana/7r0Oc.jpg', 
-    'Fotos/adentro_de_la_cabana/nAKfa.jpg', 'Fotos/adentro_de_la_cabana/SJrpZ.jpg', 
-    'Fotos/adentro_de_la_cabana/tlhrx.jpg', 'Fotos/adentro_de_la_cabana/TXd14.jpg'
+    'Fotos/adentro_de_la_cabana/04s51e0.jpg', 'Fotos/adentro_de_la_cabana/05yXj7C.jpg', 
+    'Fotos/adentro_de_la_cabana/06a5P7Iz.jpg', 'Fotos/adentro_de_la_cabana/06EA1Ch.jpg', 
+    'Fotos/adentro_de_la_cabana/06JYWxg.jpg', 'Fotos/adentro_de_la_cabana/06pUwaW.jpg', 
+    'Fotos/adentro_de_la_cabana/08Ne2S4.jpg', 'Fotos/adentro_de_la_cabana/6gAp2.jpg', 
+    'Fotos/adentro_de_la_cabana/7r0Oc.jpg', 'Fotos/adentro_de_la_cabana/nAKfa.jpg', 
+    'Fotos/adentro_de_la_cabana/SJrpZ.jpg', 'Fotos/adentro_de_la_cabana/tlhrx.jpg', 
+    'Fotos/adentro_de_la_cabana/TXd14.jpg'
   ];
 
   const posterImages = [
