@@ -218,15 +218,15 @@ const App = () => {
           </div>
         </div>
         <div className="about-imgs">
-          <div className="ai"><img src="/Fotos/El%20lugar%20en%20imágenes/pareja_playa_web.jpg" alt="El Lugar 1" /></div>
-          <div className="ai"><img src="/Fotos/El%20lugar%20en%20imágenes/pareja_playa_web2.jpg" alt="El Lugar 2" /></div>
-          <div className="ai"><img src="/Fotos/Nuestras%20cabañas/04k57lL.jpg" alt="El Lugar 3" /></div>
+          <div className="ai"><img src="Fotos/El_lugar_en_imagenes/pareja_playa_web.jpg" alt="El Lugar 1" /></div>
+          <div className="ai"><img src="Fotos/El_lugar_en_imagenes/pareja_playa_web2.jpg" alt="El Lugar 2" /></div>
+          <div className="ai"><img src="Fotos/Nuestras_cabanas/04k57lL.jpg" alt="El Lugar 3" /></div>
         </div>
       </section>
 
       {/* Photo Divider */}
       <section className="photo-divider rv">
-        <img src="/Fotos/Playa%20y%20paisaje/gTJXR.jpg" alt="Divider" />
+        <img src="Fotos/Playa_y_paisaje/gTJXR.jpg" alt="Divider" />
         <div className="pd-overlay left">
           <div className="pd-text">
             <span className="tag">Experiencia</span>
