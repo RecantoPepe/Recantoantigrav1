@@ -6,6 +6,15 @@ const App = () => {
   const [activeSlide, setActiveSlide] = useState(0);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [lbImage, setLbImage] = useState(null);
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef(null);
+
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+    }
+  };
 
   // Image mappings based on local folder "Fotos"
   const heroImages = [
@@ -130,12 +139,24 @@ const App = () => {
 
       {/* Hero Section */}
       <section className="hero" id="home">
-        {heroImages.map((img, index) => (
-          <div key={index} className={`slide ${activeSlide === index ? 'active' : ''}`}>
-            <img src={img} alt={`Slide ${index}`} />
-          </div>
-        ))}
+        <video 
+          ref={videoRef}
+          className="hero-video"
+          src="/videos/HERO01.mp4" 
+          autoPlay 
+          loop 
+          muted={isMuted} 
+          playsInline
+        />
         <div className="hero-overlay" />
+
+        {/* Equalizer Toggle */}
+        <div className={`eq-btn ${!isMuted ? 'playing' : ''}`} onClick={toggleMute} title={isMuted ? "Activar sonido" : "Silenciar sonido"}>
+          <div className="eq-bar"></div>
+          <div className="eq-bar"></div>
+          <div className="eq-bar"></div>
+          <div className="eq-bar"></div>
+        </div>
         
         <div className="hero-content">
           <div className="hero-main-layout">
@@ -168,16 +189,6 @@ const App = () => {
           </div>
         </div>
 
-        <div className="hero-dots">
-          {heroImages.map((_, i) => (
-            <div 
-              key={i} 
-              className={`hero-dot ${activeSlide === i ? 'active' : ''}`}
-              onClick={() => setActiveSlide(i)}
-              onMouseEnter={playHoverSound}
-            />
-          ))}
-        </div>
       </section>
 
       {/* Marquee */}
@@ -244,25 +255,20 @@ const App = () => {
         </div>
         
         <div className="cab-slider-outer rv">
-          <motion.div 
-            className="cab-slider-inner"
-            drag="x"
-            dragConstraints={{ left: -3500, right: 0 }} // Dynamic based on items in real app, but 3500 is safe for 13 items
-            whileTap={{ cursor: "grabbing" }}
-          >
+          <div className="cab-slider-inner">
             {cabinImages.map((img, i) => (
-              <motion.div 
+              <div 
                 key={i} 
                 className="cab-slide-item"
+                style={{ '--i': i }}
                 onClick={() => openLightbox(img)}
-                whileHover={{ scale: 0.98 }}
               >
                 <img src={img} alt={`Refugio ${i}`} />
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
           <div className="slider-hint">
-            <span>Arrastra para explorar</span>
+            <span>Exploración 3D</span>
             <div className="sh-line" />
           </div>
         </div>
