@@ -709,8 +709,8 @@ nav.scrolled {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     align-items: center;
-    /* Animación de corrido automático */
-    animation: intScroll 80s linear infinite;
+    /* Animación de corrido automático - DOBLE VELOCIDAD */
+    animation: intScroll 40s linear infinite;
 }
 
 .int-slider-track:hover {

@@ -180,13 +180,19 @@ const cabinImages = [
   'Fotos/Nuestras_cabanas/TZ4oe.jpg',
 ];
 const interiorImages = [
-  'Fotos/adentro_de_la_cabana/04s51e0.jpg','Fotos/adentro_de_la_cabana/05yXj7C.jpg',
-  'Fotos/adentro_de_la_cabana/06a5P7Iz.jpg','Fotos/adentro_de_la_cabana/06EA1Ch.jpg',
-  'Fotos/adentro_de_la_cabana/06JYWxg.jpg','Fotos/adentro_de_la_cabana/06pUwaW.jpg',
-  'Fotos/adentro_de_la_cabana/08Ne2S4.jpg','Fotos/adentro_de_la_cabana/6gAp2.jpg',
-  'Fotos/adentro_de_la_cabana/7r0Oc.jpg','Fotos/adentro_de_la_cabana/nAKfa.jpg',
-  'Fotos/adentro_de_la_cabana/SJrpZ.jpg','Fotos/adentro_de_la_cabana/tlhrx.jpg',
-  'Fotos/adentro_de_la_cabana/TXd14.jpg',
+  '/Fotos/adentro_de_la_cabana/04s51e0.jpg',
+  '/Fotos/adentro_de_la_cabana/05yXj7C.jpg',
+  '/Fotos/adentro_de_la_cabana/06EA1Ch.jpg',
+  '/Fotos/adentro_de_la_cabana/06JYWxg.jpg',
+  '/Fotos/adentro_de_la_cabana/06a5P7Iz.jpg',
+  '/Fotos/adentro_de_la_cabana/06pUwaW.jpg',
+  '/Fotos/adentro_de_la_cabana/08Ne2S4.jpg',
+  '/Fotos/adentro_de_la_cabana/6gAp2.jpg',
+  '/Fotos/adentro_de_la_cabana/7r0Oc.jpg',
+  '/Fotos/adentro_de_la_cabana/SJrpZ.jpg',
+  '/Fotos/adentro_de_la_cabana/TXd14.jpg',
+  '/Fotos/adentro_de_la_cabana/nAKfa.jpg',
+  '/Fotos/adentro_de_la_cabana/tlhrx.jpg'
 ];
 const HERO_WORDS = ['RECANTO', 'DO', 'PEPE'];
 const SUBTITLES  = [
@@ -486,7 +492,7 @@ const App = () => {
           </div>
         </section>
 
-        {/* Interior Carousel with Center Focus */}
+        {/* Interior Carousel with Center Focus (Improved speed and interaction) */}
         <section className="interior" id="interior">
           <div className="int-header rv">
             <span className="sec-label">Interiores</span>
@@ -494,22 +500,22 @@ const App = () => {
           </div>
           <div className="int-slider-outer">
             <div className="int-slider-track">
-              {/* Duplicamos las imágenes para el bucle infinito visual */}
-              {[...interiorImages, ...interiorImages].map((img, i) => (
+              {/* Triplicamos para un bucle infinito eterno y ultra fluido */}
+              {[...interiorImages, ...interiorImages, ...interiorImages].map((img, i) => (
                 <motion.div 
                   key={i} 
                   className="int-slide-item"
                   initial={{ filter: 'grayscale(1)', scale: 0.9, opacity: 0.5 }}
                   whileInView={{ filter: 'grayscale(0)', scale: 1.1, opacity: 1 }}
-                  viewport={{ amount: 0.7, margin: "0px -10% 0px -10%" }}
-                  transition={{ duration: 0.5 }}
+                  viewport={{ amount: 0.7, margin: "0px -5% 0px -5%" }}
+                  transition={{ duration: 0.4 }}
                   onClick={() => openLightbox(img)}
                 >
                   <img src={img} alt={`Interior ${i}`} />
                 </motion.div>
               ))}
             </div>
-            <div className="slider-hint dark"><span>Desliza o deja que corra solo</span><div className="sh-line" /></div>
+            <div className="slider-hint dark"><span>Desliza para acelerar o deja que corra solo</span><div className="sh-line" /></div>
           </div>
         </section>
 
