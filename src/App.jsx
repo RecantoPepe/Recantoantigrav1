@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Volume2, VolumeX } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -203,6 +204,28 @@ const App = () => {
       obs.disconnect();
     };
   }, []);
+
+  /* ── auto-unmute on interaction ── */
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      if (videoRef.current && isMuted) {
+        videoRef.current.muted = false;
+        setIsMuted(false);
+      }
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('scroll', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+    };
+    window.addEventListener('click', handleFirstInteraction);
+    window.addEventListener('scroll', handleFirstInteraction);
+    window.addEventListener('touchstart', handleFirstInteraction);
+    return () => {
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('scroll', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+    };
+  }, [isMuted]);
+
 
   /* ── GSAP Hero: pin + stagger title & subtitles ── */
   useEffect(() => {
