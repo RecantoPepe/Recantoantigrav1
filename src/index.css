@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300;1,600;1,700&family=Outfit:wght@300;400;500;600&family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300;1,600;1,700&family=Outfit:wght@300;400;500;600&family=Bebas+Neue&family=Montserrat:wght@900&display=swap');
 
 :root {
   --v: #0f1c16;
@@ -108,45 +108,69 @@ nav.scrolled {
   font-weight: 700 !important;
 }
 
-/* HERO UPDATED */
-.hero { position: relative; height: 100vh; background: #000; overflow: hidden; display: flex; align-items: center; }
-.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-.hero-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, transparent 100%); z-index: 1; }
-
-.hero-content {
-  position: relative;
-  z-index: 10;
-  width: 100%;
+/* ══ VIDEO GLOBAL FIJO ══
+   Permanece fijo en el fondo de toda la página hasta que el canvas lo tape */
+.global-bg-video {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: -2;
 }
+.global-bg-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.25) 60%, transparent 100%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ══ HERO — solo texto, sin fondo propio ══
+   El video global se ve a través de él */
+.hero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: transparent;   /* <- sin fondo: video global se asoma */
+  z-index: 1;
+}
+
+.hero-content { position: relative; z-index: 10; width: 100%; }
 
 .hero-main-layout {
   width: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 0 30px;
+  padding: 80px 30px 0; /* Agregado espacio superior para que no choque con el nav */
 }
 
-.hero-text-block {
-  max-width: 1000px;
-  position: relative;
+.hero-text-block { max-width: 1000px; position: relative; }
+
+/* ── Título apilado con gradiente por palabra ── */
+.hero-title-stack {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.88;
+  margin-bottom: 20px;
 }
 
-.hero-mega-title-grad {
+.hero-word {
+  display: block;
   font-family: 'Montserrat', 'Arial Black', sans-serif;
   font-weight: 900;
-  font-size: clamp(60px, 11vw, 140px);
-  line-height: 0.85;
+  font-size: clamp(50px, 8vw, 100px);
   letter-spacing: -2px;
   text-transform: uppercase;
-  margin-bottom: 20px;
   background: linear-gradient(to right, #ffffff 20%, var(--d) 80%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  display: inline-block;
-  vertical-align: middle;
+  will-change: transform, opacity;
 }
 
+/* Línea vertical decorativa */
 .hero-side-nav-inner {
   position: absolute;
   right: -60px;
@@ -157,30 +181,14 @@ nav.scrolled {
   align-items: center;
   gap: 15px;
 }
+.side-line { width: 1px; height: 180px; background: rgba(255,255,255,0.2); }
+.side-text { writing-mode: vertical-rl; text-transform: uppercase; letter-spacing: 5px; font-size: 0.75rem; color: var(--d); font-weight: 600; }
 
-.side-line {
-  width: 1px;
-  height: 180px;
-  background: rgba(255,255,255,0.2);
-}
+/* Subtítulos */
+.hero-sub-text-alt { color: rgba(255,255,255,0.7); font-size: 1rem; line-height: 1.6; margin-bottom: 35px; margin-top: 20px; }
+.hero-subtitle-line { will-change: transform, opacity; }
 
-.side-text {
-  writing-mode: vertical-rl;
-  text-transform: uppercase;
-  letter-spacing: 5px;
-  font-size: 0.75rem;
-  color: var(--d);
-  font-weight: 600;
-}
-
-.hero-sub-text-alt {
-  color: rgba(255,255,255,0.7);
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-bottom: 35px;
-  margin-top: 20px;
-}
-
+/* Botón CTA */
 .hero-btn-outline {
   display: inline-block;
   padding: 18px 44px;
@@ -193,62 +201,50 @@ nav.scrolled {
   background: rgba(0,0,0,0.3);
   backdrop-filter: blur(5px);
   transition: all 0.4s ease;
+  will-change: transform, opacity;
 }
+.hero-btn-outline:hover { border-color: var(--d); background: var(--d); color: var(--n); transform: translateY(-5px); }
 
-.hero-btn-outline:hover {
-  border-color: var(--d);
-  background: var(--d);
-  color: var(--n);
-  transform: translateY(-5px);
-}
-
+/* Ecualizador — FIXED para que siga visible con el video */
 .eq-btn {
-  position: absolute;
-  bottom: 40px;
-  right: 40px;
-  z-index: 100;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 3px;
-  padding-bottom: 10px;
-  cursor: pointer;
-  background: rgba(0,0,0,0.4);
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  transition: background 0.3s;
+  position: fixed; bottom: 40px; right: 40px; z-index: 200;
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: 3px; padding-bottom: 10px; cursor: pointer;
+  background: rgba(0,0,0,0.45); border-radius: 50%; width: 44px; height: 44px; transition: background 0.3s;
 }
-.eq-btn:hover { background: rgba(0,0,0,0.8); }
-.eq-bar {
-  width: 3px;
-  background: var(--d);
-  border-radius: 2px;
-  height: 4px;
-  transition: height 0.2s ease;
-}
+.eq-btn:hover { background: rgba(0,0,0,0.85); }
+.eq-bar { width: 3px; background: var(--d); border-radius: 2px; height: 4px; transition: height 0.2s ease; }
 .eq-btn.playing .eq-bar { animation: eqPlay 1s infinite alternate ease-in-out; }
-.eq-btn.playing .eq-bar:nth-child(1) { animation-delay: 0s; height: 10px; }
+.eq-btn.playing .eq-bar:nth-child(1) { animation-delay: 0s;   height: 10px; }
 .eq-btn.playing .eq-bar:nth-child(2) { animation-delay: 0.2s; height: 18px; }
-.eq-btn.playing .eq-bar:nth-child(3) { animation-delay: 0.4s; height: 8px; }
+.eq-btn.playing .eq-bar:nth-child(3) { animation-delay: 0.4s; height: 8px;  }
 .eq-btn.playing .eq-bar:nth-child(4) { animation-delay: 0.1s; height: 14px; }
-@keyframes eqPlay {
-  0% { height: 4px; }
-  100% { height: 20px; }
-}
+@keyframes eqPlay { 0% { height: 4px; } 100% { height: 20px; } }
 
-@media (max-width: 1024px) {
-  .hero-mega-title-grad { font-size: 80px; }
-  .hero-side-nav { display: none; }
-}
-
+@media (max-width: 1024px) { .hero-word { font-size: 80px; } .hero-side-nav-inner { display: none; } }
 @media (max-width: 768px) {
-  .hero-main-layout { flex-direction: column; align-items: flex-start; text-align: left; }
-  .hero-mega-title-grad { font-size: 60px; margin-top: 40px; }
+  .hero-main-layout { flex-direction: column; align-items: flex-start; }
+  .hero-word { font-size: 60px; }
   .hero-sub-text-alt { font-size: 1rem; }
 }
 
-
+/* ════ EXTERIOR SCRUB ════ */
+/* fondo oscuro para que no haya pantalla negra mientras cargan los frames */
+.ext-scrub-section { position: relative; width: 100%; height: 100vh; background: #0f1c16; overflow: hidden; }
+.ext-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.ext-overlay {
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.15) 50%, transparent 100%);
+}
+.ext-text { position: absolute; bottom: 12%; left: 6%; z-index: 10; will-change: transform, opacity; }
+.ext-label { display: block; font-size: 10px; letter-spacing: 6px; text-transform: uppercase; color: var(--d); font-weight: 700; margin-bottom: 12px; }
+.ext-title {
+  font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px, 8vw, 110px); line-height: 0.9; letter-spacing: 2px;
+  background: linear-gradient(to right, #fff 30%, var(--d) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+}
+.ext-sub { font-size: 1rem; color: rgba(255,255,255,0.65); letter-spacing: 3px; text-transform: uppercase; margin-top: 10px; }
+@media (max-width: 768px) { .ext-title { font-size: 52px; } .ext-text { left: 5%; bottom: 10%; } }
 
 .scroll-hint {
   position: absolute;
@@ -350,11 +346,19 @@ nav.scrolled {
   font-style: italic;
 }
 
-/* FULLSCREEN PHOTO DIVIDER */
+/* PHOTO-DIVIDER — tapa el video global con su propia foto */
 .photo-divider {
   position: relative;
+  z-index: 10;   /* sobre el video global */
   height: 55vh;
   overflow: hidden;
+}
+
+/* SOLID BG WRAPPER — todo lo que sigue al ExteriorScrub tiene fondo sólido */
+.solid-bg-wrapper {
+  position: relative;
+  z-index: 10;
+  background: var(--cr);
 }
 
 .photo-divider img {
@@ -416,8 +420,10 @@ nav.scrolled {
   margin-top: 12px;
 }
 
-/* ABOUT */
+/* ABOUT — sube sobre el video global fijo, fondo oscuro semitransparente */
 .about {
+  position: relative;
+  z-index: 10;
   padding: 100px 60px;
   max-width: 1300px;
   margin: 0 auto;
@@ -425,6 +431,7 @@ nav.scrolled {
   grid-template-columns: 1fr 1fr;
   gap: 80px;
   align-items: center;
+  background: transparent;
 }
 
 .about-text .sec-label {
@@ -506,7 +513,20 @@ nav.scrolled {
 
 /* CABAÑAS 3D COVERFLOW SLIDER */
 .cabanas { padding: 120px 0; background: var(--cr); overflow: hidden; }
-.cab-hd { text-align: center; margin-bottom: 60px; padding: 0 5%; }
+.cab-hd { text-align: center; margin-bottom: 80px; padding: 0 5%; }
+
+.hero-style-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: clamp(40px, 6vw, 80px);
+  letter-spacing: -1px;
+  text-transform: uppercase;
+  background: linear-gradient(to right, #ffffff 20%, var(--d) 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  line-height: 1;
+}
 
 .cab-slider-outer {
     position: relative;
