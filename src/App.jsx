@@ -335,8 +335,23 @@ const App = () => {
     };
   }, []);
 
-  return (
-    <div className={`app-wrapper ${isScrolled ? 'scrolled' : ''}`}>
+  /* ── cursor + scroll nav ── */
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 50);
+    const onMouse  = e  => setCursorPos({ x: e.clientX, y: e.clientY });
+    window.addEventListener('scroll', onScroll);
+    window.addEventListener('mousemove', onMouse);
+    const obs = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); }),
+      { threshold: 0.1 }
+    );
+    document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('mousemove', onMouse);
+      obs.disconnect();
+    };
+  }, []);
 
   /* ── auto-unmute on interaction ── */
   useEffect(() => {
@@ -358,6 +373,8 @@ const App = () => {
       window.removeEventListener('touchstart', handleFirstInteraction);
     };
   }, []); // Sin dependencias para que solo corra una vez
+
+
 
 
   /* ── GSAP Hero: pin + stagger title & subtitles ── */
@@ -424,7 +441,7 @@ const App = () => {
   };
 
   return (
-    <>
+    <div className={`app-wrapper ${isScrolled ? 'scrolled' : ''}`}>
       {/* Custom cursor */}
       <div className="cursor"      style={{ left: cursorPos.x, top: cursorPos.y }} />
       <div className="cursor-ring" style={{ left: cursorPos.x, top: cursorPos.y }} />
@@ -738,7 +755,7 @@ const App = () => {
         </footer>
 
       </div>{/* /solid-bg-wrapper */}
-    </>
+    </div>
   );
 };
 
