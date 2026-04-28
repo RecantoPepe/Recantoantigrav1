@@ -55,50 +55,60 @@ const CabanasScrolly = ({ cabinImages, openLightbox }) => {
       scrollTrigger: {
         trigger: containerRef.current,
         start: 'top top',
-        end: '+=1200%',
+        end: '+=2000%', // Mucho más espacio para que sea lento y chill
         pin: true,
         scrub: 1,
       },
     });
 
     // 1. Zoom Text (Portal Effect)
-    tl.to(titleRef.current, { scale: 50, opacity: 0, ease: 'power2.in', duration: 2.5 });
-    tl.to(plusRef.current, { color: 'var(--d)', scale: 250, duration: 2.5 }, 0);
+    tl.to(titleRef.current, { scale: 50, opacity: 0, ease: 'power2.in', duration: 3 });
+    tl.to(plusRef.current, { color: 'var(--d)', scale: 250, duration: 3 }, 0);
 
     // 2. Reveal Canvas
-    tl.fromTo(canvas, { opacity: 0 }, { opacity: 1, duration: 0.5 }, 1.5);
+    tl.fromTo(canvas, { opacity: 0 }, { opacity: 1, duration: 1 }, 2);
 
     // 3. Scrub frames
     const frameObj = { frame: 0 };
     tl.to(frameObj, {
       frame: images.length - 1,
       onUpdate: () => render(frameObj.frame),
-      duration: 4,
-    }, 2);
+      duration: 6,
+    }, 3);
 
     // 4. Reveal Stacking Gallery
-    tl.to(canvas, { opacity: 0, scale: 1.1, duration: 1 }, 6);
-    tl.fromTo(carouselRef.current, { opacity: 0 }, { opacity: 1, duration: 1 }, 6);
+    tl.to(canvas, { opacity: 0, scale: 1.1, duration: 1.5 }, 9);
+    tl.fromTo(carouselRef.current, { opacity: 0 }, { opacity: 1, duration: 1.5 }, 9);
 
-    // Animación de apilado (Solid Stacking)
+    // Animación de apilado (Solid Stacking con Dwell)
     const cards = containerRef.current.querySelectorAll('.stack-card');
     cards.forEach((card, i) => {
+      const startTime = 10 + (i * 3); // Más separación entre cartas
+      
       if (i === 0) {
-        // La primera carta ya está ahí, sólida y centrada
-        tl.fromTo(card, { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 1 }, 6);
+        tl.fromTo(card, { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5 }, 10);
         return;
       }
-      // Las siguientes cartas suben con opacidad sólida
+      
+      // La nueva carta sube
       tl.fromTo(card, 
-        { yPercent: 120, opacity: 1 }, // Empezamos desde más abajo y ya opaco
-        { yPercent: 0, opacity: 1, duration: 2, ease: 'power2.out' }, 
-        6 + (i * 0.8) 
+        { yPercent: 120, opacity: 1 }, 
+        { yPercent: 0, opacity: 1, duration: 2.5, ease: 'power2.out' }, 
+        startTime
       );
-      // La carta anterior se va al fondo (se encoge y oscurece pero sigue ahí)
+      
+      // La anterior solo se oscurece cuando la nueva está a punto de llegar
       if (i > 0) {
-        tl.to(cards[i-1], { scale: 0.9, filter: 'brightness(0.3)', duration: 1.5 }, 6 + (i * 0.8));
+        tl.to(cards[i-1], { 
+          scale: 0.92, 
+          filter: 'brightness(0.2)', 
+          duration: 1.5 
+        }, startTime + 1); // Delay de 1 unidad para que no se ponga negra antes
       }
     });
+
+    // Dwell final para la última carta
+    tl.to({}, { duration: 2 }); 
 
     return () => {
       tl.scrollTrigger?.kill();
