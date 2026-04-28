@@ -80,23 +80,23 @@ const CabanasScrolly = ({ cabinImages, openLightbox }) => {
     tl.to(canvas, { opacity: 0, scale: 1.1, duration: 1 }, 6);
     tl.fromTo(carouselRef.current, { opacity: 0 }, { opacity: 1, duration: 1 }, 6);
 
-    // Animación de apilado (Staggered Stacking)
+    // Animación de apilado (Solid Stacking)
     const cards = containerRef.current.querySelectorAll('.stack-card');
     cards.forEach((card, i) => {
       if (i === 0) {
-        // La primera carta ya está ahí, solo la escalamos un poco al inicio
+        // La primera carta ya está ahí, sólida y centrada
         tl.fromTo(card, { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 1 }, 6);
         return;
       }
-      // Las siguientes cartas suben y se apilan
+      // Las siguientes cartas suben con opacidad sólida
       tl.fromTo(card, 
-        { yPercent: 100, opacity: 0 }, 
-        { yPercent: 0, opacity: 1, duration: 1.5, ease: 'power2.out' }, 
-        6 + (i * 0.4) // Salida escalonada
+        { yPercent: 120, opacity: 1 }, // Empezamos desde más abajo y ya opaco
+        { yPercent: 0, opacity: 1, duration: 2, ease: 'power2.out' }, 
+        6 + (i * 0.8) 
       );
-      // Efecto de retroceso para la carta anterior (se va "atrás")
+      // La carta anterior se va al fondo (se encoge y oscurece pero sigue ahí)
       if (i > 0) {
-        tl.to(cards[i-1], { scale: 0.95, filter: 'brightness(0.5)', duration: 1 }, 6 + (i * 0.4));
+        tl.to(cards[i-1], { scale: 0.9, filter: 'brightness(0.3)', duration: 1.5 }, 6 + (i * 0.8));
       }
     });
 
