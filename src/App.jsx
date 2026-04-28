@@ -55,7 +55,7 @@ const CabanasScrolly = ({ cabinImages, openLightbox }) => {
       scrollTrigger: {
         trigger: containerRef.current,
         start: 'top top',
-        end: '+=600%',
+        end: '+=1200%',
         pin: true,
         scrub: 1,
       },
@@ -76,9 +76,29 @@ const CabanasScrolly = ({ cabinImages, openLightbox }) => {
       duration: 4,
     }, 2);
 
-    // 4. Reveal 3D Carousel (Immersion)
+    // 4. Reveal Stacking Gallery
     tl.to(canvas, { opacity: 0, scale: 1.1, duration: 1 }, 6);
-    tl.fromTo(carouselRef.current, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 1.5 }, 6);
+    tl.fromTo(carouselRef.current, { opacity: 0 }, { opacity: 1, duration: 1 }, 6);
+
+    // Animación de apilado (Staggered Stacking)
+    const cards = containerRef.current.querySelectorAll('.stack-card');
+    cards.forEach((card, i) => {
+      if (i === 0) {
+        // La primera carta ya está ahí, solo la escalamos un poco al inicio
+        tl.fromTo(card, { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 1 }, 6);
+        return;
+      }
+      // Las siguientes cartas suben y se apilan
+      tl.fromTo(card, 
+        { yPercent: 100, opacity: 0 }, 
+        { yPercent: 0, opacity: 1, duration: 1.5, ease: 'power2.out' }, 
+        6 + (i * 0.4) // Salida escalonada
+      );
+      // Efecto de retroceso para la carta anterior (se va "atrás")
+      if (i > 0) {
+        tl.to(cards[i-1], { scale: 0.95, filter: 'brightness(0.5)', duration: 1 }, 6 + (i * 0.4));
+      }
+    });
 
     return () => {
       tl.scrollTrigger?.kill();
@@ -102,24 +122,19 @@ const CabanasScrolly = ({ cabinImages, openLightbox }) => {
         {/* Canvas Sequence */}
         <canvas ref={canvasRef} className="scrolly-canvas" />
 
-        {/* Cinematic Gallery Layer (Lighter and smoother for mobile) */}
+        {/* Stacking Cards Gallery (Minimalist & High-End) */}
         <div ref={carouselRef} className="scrolly-carousel-layer" style={{ opacity: 0 }}>
-           <div className="cine-gallery-container">
-            <div className="cine-gallery-track">
+           <div className="stack-gallery">
               {cabinImages.map((img, i) => (
-                <div key={i} className="cine-card" onClick={() => openLightbox(img)}>
-                   <div className="cine-card-inner">
+                <div key={i} className="stack-card" 
+                     onClick={() => openLightbox(img)}>
+                   <div className="stack-card-inner">
                      <img src={img} alt={`Refugio ${i}`} />
-                     <div className="cine-card-info">
-                       <span className="cine-tag">CABAÑA {i + 1}</span>
-                       <h3 className="cine-name">Recanto do Pepe</h3>
-                     </div>
                    </div>
                 </div>
               ))}
-            </div>
-            <div className="slider-hint"><span>Desliza para explorar</span><div className="sh-line" /></div>
-          </div>
+              <div className="slider-hint"><span>Sigue bajando para pasar las fotos</span><div className="sh-line" /></div>
+           </div>
         </div>
 
       </div>
