@@ -699,6 +699,15 @@ nav.scrolled {
     padding: 80px 0;
 }
 
+.int-slider-track-gsap {
+    display: flex;
+    gap: 60px;
+    padding: 0 40px;
+    align-items: center;
+    position: relative;
+    width: max-content;
+}
+
 .int-slider-track {
     display: flex;
     gap: 60px;
@@ -709,8 +718,6 @@ nav.scrolled {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     align-items: center;
-    /* Animación de corrido automático - DOBLE VELOCIDAD */
-    animation: intScroll 40s linear infinite;
 }
 
 .int-slider-track:hover {

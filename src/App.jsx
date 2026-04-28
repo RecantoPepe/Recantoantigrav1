@@ -3,8 +3,92 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, VolumeX, Menu, X } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Draggable } from 'gsap/Draggable';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, Draggable);
+
+/* ── GSAP HORIZONTAL LOOP HELPER ──────────────── */
+function horizontalLoop(items, config) {
+	items = gsap.utils.toArray(items);
+	config = config || {};
+	let tl = gsap.timeline({repeat: config.repeat, paused: config.paused, defaults: {ease: "none"}, onReverseComplete: () => tl.totalTime(tl.rawTime() + tl.duration() * 100)}),
+		length = items.length,
+		startX = items[0].offsetLeft,
+		times = [],
+		widths = [],
+		xPercents = [],
+		curIndex = 0,
+		pixelsPerSecond = (config.speed || 1) * 100,
+		snap = config.snap === false ? v => v : gsap.utils.snap(config.snap || 1), 
+		totalWidth, curX, distanceToStart, distanceToLoop, item, i;
+	gsap.set(items, { 
+		xPercent: (i, target) => {
+			let w = widths[i] = parseFloat(gsap.getProperty(target, "width", "px"));
+			xPercents[i] = snap(parseFloat(gsap.getProperty(target, "xPercent")) / 100 * w + gsap.getProperty(target, "x", "px")) / w * 100;
+			return xPercents[i];
+		}
+	});
+	gsap.set(items, {x: 0});
+	totalWidth = items[length-1].offsetLeft + xPercents[length-1] / 100 * widths[length-1] - startX + items[length-1].offsetWidth * gsap.getProperty(items[length-1], "scaleX") + (parseFloat(config.paddingRight) || 0);
+	for (i = 0; i < length; i++) {
+		item = items[i];
+		curX = xPercents[i] / 100 * widths[i];
+		distanceToStart = item.offsetLeft - startX;
+		distanceToLoop = distanceToStart + widths[i] * gsap.getProperty(item, "scaleX");
+		tl.to(item, {xPercent: snap((curX - distanceToLoop) / widths[i] * 100), duration: distanceToLoop / pixelsPerSecond}, 0)
+		  .fromTo(item, {xPercent: snap((curX - distanceToLoop + totalWidth) / widths[i] * 100)}, {xPercent: xPercents[i], duration: (curX - distanceToLoop + totalWidth - curX) / pixelsPerSecond, immediateRender: false}, distanceToLoop / pixelsPerSecond)
+		  .add("label" + i, distanceToStart / pixelsPerSecond);
+		times[i] = distanceToStart / pixelsPerSecond;
+	}
+	function toIndex(index, vars) {
+		vars = vars || {};
+		(Math.abs(index - curIndex) > length / 2) && (index += index > curIndex ? -length : length); 
+		let newIndex = gsap.utils.wrap(0, length, index),
+			time = times[newIndex];
+		if (time > tl.time() !== index > curIndex) { 
+			vars.modifiers = {time: gsap.utils.unitize(gsap.utils.wrap(0, tl.duration()))};
+			time += tl.duration() * (index > curIndex ? 1 : -1);
+		}
+		curIndex = newIndex;
+		vars.overwrite = true;
+		return tl.tweenTo(time, vars);
+	}
+	tl.next = vars => toIndex(curIndex + 1, vars);
+	tl.previous = vars => toIndex(curIndex - 1, vars);
+	tl.current = () => curIndex;
+	tl.toIndex = (index, vars) => toIndex(index, vars);
+	tl.times = times;
+	tl.progress(1, true).progress(0, true); 
+	if (config.reversed) {
+		tl.vars.onReverseComplete();
+		tl.reverse();
+	}
+	if (config.draggable && typeof(Draggable) !== "undefined") {
+		let proxy = document.createElement("div"),
+			type = config.dragType || "x,y",
+			ratio = 1,
+			onPress = function() {
+				tl.pause();
+			},
+			onRelease = function() {
+				tl.play();
+			},
+			draggable = Draggable.create(proxy, {
+				trigger: items[0].parentNode,
+				type: type,
+				onPress: onPress,
+				onRelease: onRelease,
+				onDrag: function() {
+					tl.progress(gsap.utils.wrap(0, 1, tl.progress() + (this.deltaX * ratio / totalWidth) * (config.reversed ? -1 : 1)));
+				},
+				onThrowUpdate: function() {
+					tl.progress(gsap.utils.wrap(0, 1, tl.progress() + (this.deltaX * ratio / totalWidth) * (config.reversed ? -1 : 1)));
+				},
+				inertia: config.inertia || false
+			})[0];
+	}
+	return tl;
+}
 
 /* ── SCROLLYTELLING COMPONENT ──────────────── */
 const CabanasScrolly = ({ cabinImages, openLightbox }) => {
@@ -492,30 +576,45 @@ const App = () => {
           </div>
         </section>
 
-        {/* Interior Carousel with Center Focus (Improved speed and interaction) */}
+        {/* Interior Carousel with GSAP Loop (Professional Grade) */}
         <section className="interior" id="interior">
           <div className="int-header rv">
             <span className="sec-label">Interiores</span>
             <h2 className="sec-title">Confort en cada <em>detalle</em></h2>
           </div>
           <div className="int-slider-outer">
-            <div className="int-slider-track">
-              {/* Triplicamos para un bucle infinito eterno y ultra fluido */}
-              {[...interiorImages, ...interiorImages, ...interiorImages].map((img, i) => (
+            <div className="int-slider-track-gsap" ref={el => {
+              if (el) {
+                const items = el.querySelectorAll('.int-slide-item');
+                if (items.length > 0 && !el.dataset.loopInit) {
+                  el.dataset.loopInit = 'true';
+                  const loop = horizontalLoop(items, { 
+                    repeat: -1, 
+                    speed: 2, 
+                    paddingRight: 60,
+                    draggable: true,
+                    dragType: "x"
+                  });
+                  el.addEventListener('mouseenter', () => loop.pause());
+                  el.addEventListener('mouseleave', () => loop.play());
+                  // Draggable logic can be added here if needed, but for now focus on speed and loop
+                }
+              }
+            }}>
+              {interiorImages.map((img, i) => (
                 <motion.div 
                   key={i} 
                   className="int-slide-item"
-                  initial={{ filter: 'grayscale(1)', scale: 0.9, opacity: 0.5 }}
-                  whileInView={{ filter: 'grayscale(0)', scale: 1.1, opacity: 1 }}
-                  viewport={{ amount: 0.7, margin: "0px -5% 0px -5%" }}
-                  transition={{ duration: 0.4 }}
+                  initial={{ filter: 'grayscale(1)', scale: 0.9 }}
+                  whileInView={{ filter: 'grayscale(0)', scale: 1.1 }}
+                  viewport={{ amount: 0.7 }}
                   onClick={() => openLightbox(img)}
                 >
                   <img src={img} alt={`Interior ${i}`} />
                 </motion.div>
               ))}
             </div>
-            <div className="slider-hint dark"><span>Desliza para acelerar o deja que corra solo</span><div className="sh-line" /></div>
+            <div className="slider-hint dark"><span>Desliza o deja que corra solo</span><div className="sh-line" /></div>
           </div>
         </section>
 
