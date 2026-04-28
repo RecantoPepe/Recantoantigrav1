@@ -1021,7 +1021,7 @@ nav.scrolled {
   display: grid;
   grid-template-columns: 1fr 1.1fr;
   gap: 60px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .ct-left .sec-label {
@@ -1049,67 +1049,68 @@ nav.scrolled {
 .clink {
   display: flex;
   align-items: center;
-  gap: 18px;
-  padding: 22px 26px;
-  border-radius: 16px;
+  gap: 24px;
+  padding: 30px 0;
   text-decoration: none;
-  transition: transform .3s, box-shadow .3s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+}
+
+.clink:hover {
+  padding-left: 15px;
+  border-bottom-color: var(--d);
 }
 
 .clink-icon {
-  font-size: 28px;
-  flex-shrink: 0;
+  font-size: 24px;
+  filter: grayscale(1) brightness(1.5);
+  transition: all 0.4s;
+}
+
+.clink:hover .clink-icon {
+  filter: grayscale(0) brightness(1);
+  transform: scale(1.2);
 }
 
 .clink-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .clink-main {
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: 0.5px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff;
 }
 
 .clink-sub {
   font-size: 13px;
-  font-weight: 400;
-  opacity: .8;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 300;
 }
 
-.clink-wa {
-  background: #25d366;
-  color: #fff;
-  box-shadow: 0 8px 20px rgba(37, 211, 102, .25);
+/* Ajustes específicos eliminados en favor del estilo minimalista global */
+.clink-wa, .clink-em, .clink-ad {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding-right: 20px;
 }
 
-.clink-wa:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(37, 211, 102, .35);
-}
-
-.clink-em {
-  background: var(--n);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-.clink-em:hover {
-  transform: translateY(-3px);
-}
-
-.clink-ad {
-  background: #f8f8f8;
-  color: var(--n);
-  border: 1px solid rgba(0,0,0,0.05);
-}
+.clink-wa:hover .clink-main { color: #25d366; }
+.clink-em:hover .clink-main { color: var(--d); }
+.clink-ad:hover .clink-main { color: var(--d); }
 
 .map-wrap {
   border-radius: 20px;
   overflow: hidden;
-  height: 460px;
+  height: 100%;
+  min-height: 400px;
   box-shadow: 0 14px 44px rgba(0, 0, 0, .1);
 }
 
@@ -1121,7 +1122,7 @@ nav.scrolled {
 
 /* FOOTER */
 /* Filosofía Section */
-.filosofia { background: var(--n); padding: 120px 5%; color: #fff; text-align: center; }
+.filosofia { background: var(--cr); padding: 120px 5%; color: #fff; text-align: center; }
 .filo-header { margin-bottom: 60px; }
 .filo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; max-width: 1400px; margin: 0 auto; }
 .filo-item { height: 450px; border-radius: 20px; overflow: hidden; position: relative; }
@@ -1155,7 +1156,7 @@ nav.scrolled {
 }
 
 footer {
-  background: var(--n);
+  background: var(--cr);
   padding: 40px 60px;
   display: flex;
   justify-content: space-between;
