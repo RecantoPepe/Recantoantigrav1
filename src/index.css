@@ -1283,7 +1283,7 @@ footer {
   position: relative;
   width: 100%;
   height: 100vh;
-  background: var(--n);
+  background: var(--v);
   overflow: hidden;
 }
 

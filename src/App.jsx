@@ -208,7 +208,7 @@ const App = () => {
   /* ── auto-unmute on interaction ── */
   useEffect(() => {
     const handleFirstInteraction = () => {
-      if (videoRef.current && isMuted) {
+      if (videoRef.current) {
         videoRef.current.muted = false;
         setIsMuted(false);
       }
@@ -224,7 +224,7 @@ const App = () => {
       window.removeEventListener('scroll', handleFirstInteraction);
       window.removeEventListener('touchstart', handleFirstInteraction);
     };
-  }, [isMuted]);
+  }, []); // Sin dependencias para que solo corra una vez
 
 
   /* ── GSAP Hero: pin + stagger title & subtitles ── */
