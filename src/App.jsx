@@ -5,6 +5,123 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+/* ── SCROLLYTELLING COMPONENT ──────────────── */
+const CabanasScrolly = ({ cabinImages, openLightbox }) => {
+  const containerRef = useRef(null);
+  const canvasRef = useRef(null);
+  const titleRef = useRef(null);
+  const plusRef = useRef(null);
+  const carouselRef = useRef(null);
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    const frameCount = 211;
+    const loadedImages = [];
+    let loadedCount = 0;
+
+    for (let i = 1; i <= frameCount; i++) {
+      const img = new Image();
+      const num = i.toString().padStart(6, '0');
+      // Los frames están en /exteriorScroll/ext_000001.jpg (servidos desde public)
+      img.src = `/exteriorScroll/ext_${num}.jpg`;
+      img.onload = () => {
+        loadedCount++;
+        if (loadedCount === frameCount) setImages(loadedImages);
+      };
+      loadedImages.push(img);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!containerRef.current || !canvasRef.current || images.length === 0) return;
+
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    canvas.width = 1920;
+    canvas.height = 1080;
+
+    const render = (index) => {
+      const img = images[Math.floor(index)];
+      if (img) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+      }
+    };
+
+    render(0);
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top top',
+        end: '+=600%',
+        pin: true,
+        scrub: 1,
+      },
+    });
+
+    // 1. Zoom Text (Portal Effect)
+    tl.to(titleRef.current, { scale: 50, opacity: 0, ease: 'power2.in', duration: 2.5 });
+    tl.to(plusRef.current, { color: 'var(--d)', scale: 250, duration: 2.5 }, 0);
+
+    // 2. Reveal Canvas
+    tl.fromTo(canvas, { opacity: 0 }, { opacity: 1, duration: 0.5 }, 1.5);
+
+    // 3. Scrub frames
+    const frameObj = { frame: 0 };
+    tl.to(frameObj, {
+      frame: images.length - 1,
+      onUpdate: () => render(frameObj.frame),
+      duration: 4,
+    }, 2);
+
+    // 4. Reveal 3D Carousel (Immersion)
+    tl.to(canvas, { opacity: 0, scale: 1.1, duration: 1 }, 6);
+    tl.fromTo(carouselRef.current, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 1.5 }, 6);
+
+    return () => {
+      tl.scrollTrigger?.kill();
+      tl.kill();
+    };
+  }, [images]);
+
+  return (
+    <section ref={containerRef} className="scrolly-cabanas" id="cabanas">
+      <div className="scrolly-layers">
+        
+        {/* Portal Text */}
+        <div ref={titleRef} className="scrolly-text-portal">
+          <h2 className="portal-title">
+            <span className="portal-word">CABAÑAS</span>
+            <span ref={plusRef} className="portal-plus">+</span>
+            <span className="portal-word">DESCANSO</span>
+          </h2>
+        </div>
+
+        {/* Canvas Sequence */}
+        <canvas ref={canvasRef} className="scrolly-canvas" />
+
+        {/* 3D Carousel Layer */}
+        <div ref={carouselRef} className="scrolly-carousel-layer" style={{ opacity: 0 }}>
+           <div className="cab-slider-outer">
+            <div className="cab-slider-inner">
+              {cabinImages.map((img, i) => (
+                <div key={i} className="cab-slide-item" style={{ '--i': i }}
+                     onClick={() => openLightbox(img)}>
+                   <img src={img} alt={`Refugio ${i}`} />
+                </div>
+              ))}
+            </div>
+            <div className="slider-hint"><span>Exploración 3D</span><div className="sh-line" /></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+};
+
+
 /* ── DATA ─────────────────────────────────── */
 const galleryRow1 = [
   'Fotos/El_lugar_en_imagenes/05age2.jpg','Fotos/El_lugar_en_imagenes/07Kfv0D.jpg',
@@ -253,13 +370,7 @@ const App = () => {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════
-          Todo lo que sigue tiene fondo sólido
-          → el video global queda completamente oculto
-      ══════════════════════════════════════ */}
       <div className="solid-bg-wrapper">
-
-        {/* Marquee */}
         <div className="marquee">
           <div className="mq-inner">
             {[...Array(6)].map((_, i) => (
@@ -273,23 +384,7 @@ const App = () => {
           </div>
         </div>
 
-        {/* ═══ 5. CABAÑAS 3D carousel ══ */}
-        <section className="cabanas" id="cabanas">
-          <div className="cab-hd rv">
-            <h2 className="hero-style-title">CABAÑAS + DESCANSO</h2>
-          </div>
-          <div className="cab-slider-outer rv">
-            <div className="cab-slider-inner">
-              {cabinImages.map((img, i) => (
-                <div key={i} className="cab-slide-item" style={{ '--i': i }}
-                     onClick={() => openLightbox(img)}>
-                  <img src={img} alt={`Refugio ${i}`} />
-                </div>
-              ))}
-            </div>
-            <div className="slider-hint"><span>Exploración 3D</span><div className="sh-line" /></div>
-          </div>
-        </section>
+        <CabanasScrolly cabinImages={cabinImages} openLightbox={openLightbox} />
 
         {/* Gallery */}
         <section className="galeria" id="galeria">

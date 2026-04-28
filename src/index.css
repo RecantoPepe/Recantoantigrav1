@@ -1277,3 +1277,110 @@ footer {
     left: 26px;
   }
 }
+
+/* ── SCROLLYTELLING CABAÑAS ──────────────── */
+.scrolly-cabanas {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: var(--n);
+  overflow: hidden;
+}
+
+.scrolly-layers {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Layer 1: Portal Text */
+.scrolly-text-portal {
+  position: absolute;
+  z-index: 50;
+  text-align: center;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.portal-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: clamp(40px, 12vw, 150px);
+  color: var(--n);
+  letter-spacing: -2px;
+  line-height: 1;
+  text-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  transform-origin: center center;
+}
+
+.portal-plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--d);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+
+/* Layer 2: Canvas */
+.scrolly-canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 20;
+  opacity: 0;
+}
+
+/* Layer 3: Carousel Immersion */
+.scrolly-carousel-layer {
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.scrolly-carousel-layer .cab-hd {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.scrolly-carousel-layer .cab-slider-outer {
+  width: 100%;
+  max-width: 1400px;
+  perspective: 2000px;
+}
+
+/* Re-utilizar estilos de cabañas pero ajustados */
+.scrolly-carousel-layer .cab-slider-inner {
+  transform-style: preserve-3d;
+  height: 450px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive fixes for scrolly */
+@media (max-width: 768px) {
+  .portal-title { font-size: 15vw; }
+  .scrolly-carousel-layer .cab-slider-inner { height: 300px; }
+}
+
