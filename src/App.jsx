@@ -308,23 +308,35 @@ const App = () => {
     if (videoRef.current) videoRef.current.muted = next;
   };
 
-  /* ── cursor + scroll nav ── */
+  // Interior Loop State
+  const interiorTrackRef = useRef(null);
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 50);
-    const onMouse  = e  => setCursorPos({ x: e.clientX, y: e.clientY });
-    window.addEventListener('scroll', onScroll);
-    window.addEventListener('mousemove', onMouse);
-    const obs = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); }),
-      { threshold: 0.1 }
-    );
-    document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+    const el = interiorTrackRef.current;
+    if (!el) return;
+    
+    // Esperamos un poquito a que el DOM se asiente
+    const timer = setTimeout(() => {
+      const items = el.querySelectorAll('.int-slide-item');
+      if (items.length > 0) {
+        const loop = horizontalLoop(items, { 
+          repeat: -1, 
+          speed: 1.5, 
+          paddingRight: 60,
+          draggable: true,
+          dragType: "x"
+        });
+        el._gsapLoop = loop; // Guardamos referencia
+      }
+    }, 500);
+
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('mousemove', onMouse);
-      obs.disconnect();
+      clearTimeout(timer);
+      if (el._gsapLoop) el._gsapLoop.kill();
     };
   }, []);
+
+  return (
+    <div className={`app-wrapper ${isScrolled ? 'scrolled' : ''}`}>
 
   /* ── auto-unmute on interaction ── */
   useEffect(() => {
@@ -583,24 +595,7 @@ const App = () => {
             <h2 className="sec-title">Confort en cada <em>detalle</em></h2>
           </div>
           <div className="int-slider-outer">
-            <div className="int-slider-track-gsap" ref={el => {
-              if (el) {
-                const items = el.querySelectorAll('.int-slide-item');
-                if (items.length > 0 && !el.dataset.loopInit) {
-                  el.dataset.loopInit = 'true';
-                  const loop = horizontalLoop(items, { 
-                    repeat: -1, 
-                    speed: 2, 
-                    paddingRight: 60,
-                    draggable: true,
-                    dragType: "x"
-                  });
-                  el.addEventListener('mouseenter', () => loop.pause());
-                  el.addEventListener('mouseleave', () => loop.play());
-                  // Draggable logic can be added here if needed, but for now focus on speed and loop
-                }
-              }
-            }}>
+            <div className="int-slider-track-gsap" ref={interiorTrackRef}>
               {interiorImages.map((img, i) => (
                 <motion.div 
                   key={i} 
