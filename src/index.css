@@ -554,80 +554,97 @@ nav.scrolled {
   height: 180px;
 }
 
-/* CABAÑAS 3D COVERFLOW SLIDER */
-.cabanas { padding: 120px 0; background: var(--cr); overflow: hidden; }
-.cab-hd { text-align: center; margin-bottom: 80px; padding: 0 5%; }
+/* CINEMATIC GALLERY (High Performance) */
+.cine-gallery-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
 
-.hero-style-title {
+.cine-gallery-track {
+  display: flex;
+  gap: 30px;
+  padding: 0 10vw;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+
+.cine-gallery-track::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.cine-card {
+  flex: 0 0 60vw;
+  height: 55vh;
+  scroll-snap-align: center;
+  cursor: pointer;
+  perspective: 1000px;
+}
+
+.cine-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #1a1a1a;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.cine-card:hover .cine-card-inner {
+  transform: scale(1.02) translateY(-10px);
+}
+
+.cine-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.cine-card:hover img {
+  transform: scale(1.1);
+}
+
+.cine-card-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 40px 30px;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cine-tag {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 4px;
+  color: var(--d);
+}
+
+.cine-name {
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
-  font-size: clamp(40px, 6vw, 80px);
-  letter-spacing: -1px;
+  font-size: 24px;
+  color: #fff;
   text-transform: uppercase;
-  background: linear-gradient(to right, #ffffff 20%, var(--d) 80%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: inline-block;
-  line-height: 1;
 }
 
-.cab-slider-outer {
-    position: relative;
-    width: 100%;
-    height: 600px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    perspective: 1500px;
-}
-
-.cab-slider-inner {
-    position: relative;
-    width: min(440px, 85vw);
-    height: 350px;
-    transform-style: preserve-3d;
-}
-
-.cab-slide-item {
-    position: absolute;
-    inset: 0;
-    border-radius: 20px;
-    overflow: hidden;
-    cursor: pointer;
-    -webkit-box-reflect: below 10px linear-gradient(transparent, transparent, rgba(0,0,0,0.3));
-    /* Duration = 2s * 13 images = 26s */
-    animation: scaleEffect 26s infinite ease-in-out;
-    animation-delay: calc(26s / 13 * var(--i) * -1);
-}
-.cab-slide-item img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-
-@keyframes scaleEffect {
-    0%, 30%, 70%, 100% {
-        transform: translateX(0) scale(0.6) rotateY(-90deg);
-        z-index: 0;
-        filter: grayscale(1);
-        opacity: 0;
-    }
-    40% {
-        transform: translateX(120%) scale(0.8) rotateY(-40deg);
-        z-index: 5;
-        filter: grayscale(0.5);
-        opacity: 1;
-    }
-    50% {
-        transform: translateX(0) scale(1) rotateY(0deg);
-        z-index: 10;
-        filter: grayscale(0);
-        opacity: 1;
-        box-shadow: 0 30px 60px rgba(0,0,0,0.4);
-    }
-    60% {
-        transform: translateX(-120%) scale(0.8) rotateY(40deg);
-        z-index: 5;
-        filter: grayscale(0.5);
-        opacity: 1;
-    }
+@media (min-width: 1024px) {
+  .cine-card {
+    flex: 0 0 380px;
+    height: 500px;
+  }
 }
 
 .slider-hint {

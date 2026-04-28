@@ -102,18 +102,23 @@ const CabanasScrolly = ({ cabinImages, openLightbox }) => {
         {/* Canvas Sequence */}
         <canvas ref={canvasRef} className="scrolly-canvas" />
 
-        {/* 3D Carousel Layer */}
+        {/* Cinematic Gallery Layer (Lighter and smoother for mobile) */}
         <div ref={carouselRef} className="scrolly-carousel-layer" style={{ opacity: 0 }}>
-           <div className="cab-slider-outer">
-            <div className="cab-slider-inner">
+           <div className="cine-gallery-container">
+            <div className="cine-gallery-track">
               {cabinImages.map((img, i) => (
-                <div key={i} className="cab-slide-item" style={{ '--i': i }}
-                     onClick={() => openLightbox(img)}>
-                   <img src={img} alt={`Refugio ${i}`} />
+                <div key={i} className="cine-card" onClick={() => openLightbox(img)}>
+                   <div className="cine-card-inner">
+                     <img src={img} alt={`Refugio ${i}`} />
+                     <div className="cine-card-info">
+                       <span className="cine-tag">CABAÑA {i + 1}</span>
+                       <h3 className="cine-name">Recanto do Pepe</h3>
+                     </div>
+                   </div>
                 </div>
               ))}
             </div>
-            <div className="slider-hint"><span>Exploración 3D</span><div className="sh-line" /></div>
+            <div className="slider-hint"><span>Desliza para explorar</span><div className="sh-line" /></div>
           </div>
         </div>
 
