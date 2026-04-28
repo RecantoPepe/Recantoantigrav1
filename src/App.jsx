@@ -486,23 +486,30 @@ const App = () => {
           </div>
         </section>
 
-        {/* Interior drag */}
+        {/* Interior Carousel with Center Focus */}
         <section className="interior" id="interior">
           <div className="int-header rv">
             <span className="sec-label">Interiores</span>
             <h2 className="sec-title">Confort en cada <em>detalle</em></h2>
           </div>
-          <div className="int-slider-outer rv">
-            <motion.div className="int-slider-inner" drag="x"
-                        dragConstraints={{ left: -3500, right: 0 }} whileTap={{ cursor: 'grabbing' }}>
-              {interiorImages.map((img, i) => (
-                <motion.div key={i} className="int-slide-item"
-                            onClick={() => openLightbox(img)} whileHover={{ scale: 0.98 }}>
+          <div className="int-slider-outer">
+            <div className="int-slider-track">
+              {/* Duplicamos las imágenes para el bucle infinito visual */}
+              {[...interiorImages, ...interiorImages].map((img, i) => (
+                <motion.div 
+                  key={i} 
+                  className="int-slide-item"
+                  initial={{ filter: 'grayscale(1)', scale: 0.9, opacity: 0.5 }}
+                  whileInView={{ filter: 'grayscale(0)', scale: 1.1, opacity: 1 }}
+                  viewport={{ amount: 0.7, margin: "0px -10% 0px -10%" }}
+                  transition={{ duration: 0.5 }}
+                  onClick={() => openLightbox(img)}
+                >
                   <img src={img} alt={`Interior ${i}`} />
                 </motion.div>
               ))}
-            </motion.div>
-            <div className="slider-hint dark"><span>Arrastrá para recorrer el interior</span><div className="sh-line" /></div>
+            </div>
+            <div className="slider-hint dark"><span>Desliza o deja que corra solo</span><div className="sh-line" /></div>
           </div>
         </section>
 
