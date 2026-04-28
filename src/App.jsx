@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX, Menu, X } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -172,6 +172,7 @@ const App = () => {
   const [cursorPos,  setCursorPos]  = useState({ x: 0, y: 0 });
   const [lbImage,    setLbImage]    = useState(null);
   const [isMuted,    setIsMuted]    = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const videoRef    = useRef(null);
   const heroRef     = useRef(null);       // sección que se pina
@@ -322,13 +323,35 @@ const App = () => {
       {/* Nav */}
       <nav className={isScrolled ? 'scrolled' : ''}>
         <div className="nav-left">TU SANTUARIO DE MADERA Y MAR</div>
+        
+        {/* Desktop Links */}
         <div className="nav-links">
           <a href="#about">Experiencia</a>
           <a href="#cabanas">Cabañas</a>
           <a href="#compras">Frontera</a>
           <a href="#contacto" className="nav-cta">Reservar Ahora</a>
         </div>
+
+        {/* Mobile Toggle */}
+        <button className="nav-mobile-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          {isMenuOpen ? <X /> : <Menu />}
+        </button>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div className="mobile-menu"
+                      initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+            <div className="mm-links">
+              <a href="#about" onClick={() => setIsMenuOpen(false)}>Experiencia</a>
+              <a href="#cabanas" onClick={() => setIsMenuOpen(false)}>Cabañas</a>
+              <a href="#compras" onClick={() => setIsMenuOpen(false)}>Frontera</a>
+              <a href="#contacto" className="mm-cta" onClick={() => setIsMenuOpen(false)}>Reservar Ahora</a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ═══════════════════════════════════
           1. HERO — sección pinada por GSAP

@@ -108,6 +108,49 @@ nav.scrolled {
   font-weight: 700 !important;
 }
 
+.nav-mobile-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  z-index: 300;
+}
+
+/* MOBILE MENU */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  background: var(--cr);
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.mm-links {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  text-align: center;
+}
+
+.mm-links a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+.mm-cta {
+  color: var(--d) !important;
+}
+
+
 /* ══ VIDEO GLOBAL FIJO ══
    Permanece fijo en el fondo de toda la página hasta que el canvas lo tape */
 .global-bg-video {
@@ -541,7 +584,7 @@ nav.scrolled {
 
 .cab-slider-inner {
     position: relative;
-    width: 440px;
+    width: min(440px, 85vw);
     height: 350px;
     transform-style: preserve-3d;
 }
@@ -1267,11 +1310,17 @@ footer {
   .nav-links {
     display: none;
   }
+  .nav-mobile-btn {
+    display: block;
+  }
   .hero-content, .pd-overlay {
     padding: 0 26px;
   }
   .about, .cabanas, .amenidades, .compras, .contacto, .carteles, .interior {
     padding: 70px 22px;
+  }
+  .clink {
+    padding: 20px 0;
   }
   .hero-dots {
     left: 26px;
